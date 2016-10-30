@@ -5,6 +5,7 @@ using namespace std;
 
 int main(){
 	char tmp;
+	//collects input unitl valid input of 1 or 2 for default or enter puzzle
 	int toSolve[3][3] = {{1, 2, 3}, {4, 8 , 0}, {7, 6, 5}};
 	cout << "Welcome to Preston Giorgianni's 8-puzzle solver." << endl;
 	cout << "Type 1 to use default puzzle, or 2 to enter your own." << endl;
@@ -15,6 +16,7 @@ int main(){
 		cout << "Type 1 to use default puzzle, or 2 to enter your own." << endl;
 		cin >> tmp;
 	}
+	//collects the puzzle input
 	if(tmp == '2'){
 		cout << "Enter your puzzle, use zero to represent the blank." << endl;
 		cout << "Enter your first row, use spaces between numbers.	";
@@ -30,6 +32,9 @@ int main(){
 		cin >> toSolve[2][1];
 		cin >> toSolve[2][2];
 	}
+	//creates start node and then collects input until proper input is collected then
+	//1 starts uniform cost search, 2 starts misplaced tile, and 3 starts manhatte distance
+	//and starts the input
 	node* root = new node(toSolve, 0);
 
 	cout << "Enter your choice of algorithum." << endl;

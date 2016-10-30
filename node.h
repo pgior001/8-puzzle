@@ -14,6 +14,7 @@ class node{
 		int puzzle[3][3];
 		bool Solution;
 		bool lastLeft, lastRight, lastUp, lastDown;
+		//function to find where the blank tile is. used to calculate where you can move in createing nodes.
 		pair<int, int> findBlank(){
 			for(int i = 0; i < 3;++i){
 				for(int j = 0; j < 3; ++j){
@@ -23,6 +24,7 @@ class node{
 				}
 			}
 		};
+		//uses nested loops to determine which nodes are misplaced
 		int misplacedTile(){
 			int misplaced = 0;
 			int position = 1;
@@ -36,6 +38,8 @@ class node{
 			}
 			return misplaced;
 		};
+		//calculates the manhatten distance with a nested loops. Keeps track of what row and col
+		//that each number should be in and compares it to where it was found.
 		int manhattenDistance(){
 			int manhatten = 0;
 			int R = 0;
@@ -63,6 +67,7 @@ class node{
 			}
 			return manhatten;
 		};
+		//old function to get the depth before the varriable was added
 		int getDepth(int depth, int deepest){
 			++depth;
 			int tmp = 0;
@@ -77,11 +82,13 @@ class node{
 			if(tmp > deepest) deepest = tmp;
 			return deepest;
 		}
+		//sets the varriable that keeps track of the last move so that it is not repeated
 		void setLeft(){lastLeft = true;};
 		void setRight(){lastRight = true;};
 		void setUp(){lastUp = true;};
 		void setDown(){lastDown = true;};
 	public:
+		//constructors for the nodes.
 		node(){Solution = false;};
 		node(int puz[][3], int depth){
 			for(int i = 0; i < 3; ++i){
@@ -97,12 +104,15 @@ class node{
 			nodeDepth = depth;
 			Solution = lastLeft = lastRight = lastUp = lastDown = false;
 		};
+		//allows the weight to be set for the node
 		void setWeight(int i){
 			weight = i;
 		};
+		// another getter
 		int getDepth(){
 			return getDepth(-1, 0);
 		}
+		//recursive function to go through the tree and find the solution. When it finds it prints solution to initial puzzle
 		bool printSolution(){
 			if(Solution){
 				cout << "Solution at depth: " << nodeDepth << endl;
@@ -129,6 +139,7 @@ class node{
 			}
 			return solutionFound;
 		}
+		//utiltiy function to print the current puzzle
 		void printPuzzle(){
 			for(int i = 0; i < 3; ++i){
 				for(int j = 0; j < 3; ++j){
@@ -137,11 +148,14 @@ class node{
 				cout << endl;
 			}
 		}
+		//uses misplaced tile to tell if the nodes puzzle is a solution
 		bool isSolution(){
 			
 			Solution = (misplacedTile() == 0);
 			return Solution;
 		}
+		//the 4 create functions create nodes that will be added to the path. since there is not 
+		//tree class in this implementation there is no tree class the just expands on the node
 		node* createLeft(int type){
 			pair<int, int> tmp = findBlank();
 			if(tmp.second != 0 && !lastRight){
@@ -255,6 +269,7 @@ class node{
 			}
 			return down;
 		}
+		//getters and setters for the varriables that might need to be acessed
 		node* getLeft(){return left;};
 		node* getRight(){return right;};
 		node* getUp(){return up;};

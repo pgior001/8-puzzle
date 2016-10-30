@@ -2,6 +2,7 @@
 #include <vector>
 using namespace std;
 
+//defined comparator for the priority queue
 class Compare{
 	public:
 		bool operator()(node* A, node* B){
@@ -9,6 +10,8 @@ class Compare{
 		}
 };
 
+//uses a priority queue with the manhatten distance as weight and pre defined comparator to
+//expand the ndoes in order
 void manhattenSearch(node* root, int type){
 	node* curr = root;
 	priority_queue<node*, vector<node*>, Compare> ready;
@@ -40,6 +43,7 @@ void manhattenSearch(node* root, int type){
 	return;
 }
 
+//same as above but misplaced tile weight
 void misplacedTileSearch(node* root, int type){
 	node* curr = root;
 	priority_queue<node*, vector<node*>, Compare> ready;
@@ -70,6 +74,7 @@ void misplacedTileSearch(node* root, int type){
 	return;
 }
 
+//uses a fifo queue to expand nodes left right up down order
 void uniformCostSearch(node* root, int type){
 	node* curr = root;
 	queue<node*> ready;
