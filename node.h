@@ -1,7 +1,12 @@
 #include <utility>
 #include <vector>
 #include <cmath>
+#include <stack>
 using namespace std;
+
+const int rows = 3;
+const int cols = 3;
+int maxNum = 9;
 
 class node{
 	private:
@@ -11,13 +16,13 @@ class node{
 		node* down;
 		int weight;
 		int nodeDepth;
-		int puzzle[3][3];
+		int puzzle[rows][cols];
 		bool Solution;
 		bool lastLeft, lastRight, lastUp, lastDown;
 		//function to find where the blank tile is. used to calculate where you can move in createing nodes.
 		pair<int, int> findBlank(){
-			for(int i = 0; i < 3;++i){
-				for(int j = 0; j < 3; ++j){
+			for(int i = 0; i < rows;++i){
+				for(int j = 0; j < cols; ++j){
 					if(puzzle[i][j] == 0){
 						return make_pair(i, j);
 					}
@@ -28,8 +33,8 @@ class node{
 		int misplacedTile(){
 			int misplaced = 0;
 			int position = 1;
-			for(int i = 0; i < 3; ++i){
-				for(int j = 0; j < 3; ++j){
+			for(int i = 0; i < rows; ++i){
+				for(int j = 0; j < cols; ++j){
 					if(puzzle[i][j] != position && (i + j) != 4){
 						++misplaced;
 					}
@@ -41,6 +46,7 @@ class node{
 		//calculates the manhatten distance with a nested loops. Keeps track of what row and col
 		//that each number should be in and compares it to where it was found.
 		int manhattenDistance(){
+			cout << "calling manhatten" << endl;
 			int manhatten = 0;
 			int R = 0;
 			int C = 0;
@@ -59,12 +65,13 @@ class node{
 				if(i == 3) i = 2;
 				if(j == 3) j = 2;
 				manhatten += (abs(i-R)+abs(j-C));
-				if(C == 2){
+				if(C == 3){
 					C = 0;
 					++R;
 				}
 				else ++C;
 			}
+			cout << "results: " << manhatten << endl;
 			return manhatten;
 		};
 		//old function to get the depth before the varriable was added
@@ -90,9 +97,9 @@ class node{
 	public:
 		//constructors for the nodes.
 		node(){Solution = false;};
-		node(int puz[][3], int depth){
-			for(int i = 0; i < 3; ++i){
-				for(int j = 0;j < 3; ++j){
+		node(int puz[][rows], int depth){
+			for(int i = 0; i < rows; ++i){
+				for(int j = 0;j < cols; ++j){
 					puzzle[i][j] = puz[i][j];
 				}
 			}
@@ -113,36 +120,34 @@ class node{
 			return getDepth(-1, 0);
 		}
 		//recursive function to go through the tree and find the solution. When it finds it prints solution to initial puzzle
-		bool printSolution(){
+		bool traceSolution(stack<node*>* solutionStack){
 			if(Solution){
 				cout << "Solution at depth: " << nodeDepth << endl;
-				printPuzzle();
-				cout << endl;
+				solutionStack->push(this);
 				return Solution;
 			}
 			bool solutionFound = false;
 			if(left != NULL){
-				solutionFound = left->printSolution();
+				solutionFound = left->traceSolution(solutionStack);
 			}
 			if(!solutionFound && right != NULL){
-				solutionFound = right->printSolution();
+				solutionFound = right->traceSolution(solutionStack);
 			}
 			if(!solutionFound && up != NULL){
-				solutionFound = up->printSolution();
+				solutionFound = up->traceSolution(solutionStack);
 			}
 			if(!solutionFound && down != NULL){
-				solutionFound = down->printSolution();
+				solutionFound = down->traceSolution(solutionStack);
 			}
 			if(solutionFound){
-				printPuzzle();
-				cout << endl;
+				solutionStack->push(this);
 			}
 			return solutionFound;
 		}
 		//utiltiy function to print the current puzzle
 		void printPuzzle(){
-			for(int i = 0; i < 3; ++i){
-				for(int j = 0; j < 3; ++j){
+			for(int i = 0; i < rows; ++i){
+				for(int j = 0; j < cols; ++j){
 					cout << puzzle[i][j] << ' ';
 				}
 				cout << endl;
@@ -159,9 +164,9 @@ class node{
 		node* createLeft(int type){
 			pair<int, int> tmp = findBlank();
 			if(tmp.second != 0 && !lastRight){
-				int tmp2[3][3];
-				for(int i = 0; i < 3; ++i){
-					for(int j = 0; j < 3; ++j){
+				int tmp2[rows][cols];
+				for(int i = 0; i < rows; ++i){
+					for(int j = 0; j < cols; ++j){
 						tmp2[i][j] = puzzle[i][j];
 					}
 				}
@@ -187,9 +192,9 @@ class node{
 		node* createRight(int type){
 			pair<int, int> tmp = findBlank();
 			if(tmp.second != 2 && !lastLeft){
-				int tmp2[3][3];
-				for(int i = 0; i < 3; ++i){
-					for(int j = 0; j < 3; ++j){
+				int tmp2[rows][cols];
+				for(int i = 0; i < rows; ++i){
+					for(int j = 0; j < cols; ++j){
 						tmp2[i][j] = puzzle[i][j];
 					}
 				}
@@ -216,9 +221,9 @@ class node{
 		node* createUp(int type){
 			pair<int, int> tmp = findBlank();
 			if(tmp.first != 0 && !lastDown){
-				int tmp2[3][3];
-				for(int i = 0; i < 3; ++i){
-					for(int j = 0; j < 3; ++j){
+				int tmp2[rows][cols];
+				for(int i = 0; i < rows; ++i){
+					for(int j = 0; j < cols; ++j){
 						tmp2[i][j] = puzzle[i][j];
 					}
 				}
@@ -244,9 +249,9 @@ class node{
 		node* createDown(int type){
 			pair<int, int> tmp = findBlank();
 			if(tmp.first != 2 && !lastUp){
-				int tmp2[3][3];
-				for(int i = 0; i < 3; ++i){
-					for(int j = 0; j < 3; ++j){
+				int tmp2[rows][cols];
+				for(int i = 0; i < rows; ++i){
+					for(int j = 0; j < cols; ++j){
 						tmp2[i][j] = puzzle[i][j];
 					}
 				}

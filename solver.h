@@ -1,5 +1,6 @@
 #include <queue>
 #include <vector>
+#include <stack>
 using namespace std;
 
 //defined comparator for the priority queue
@@ -11,11 +12,12 @@ class Compare{
 };
 
 //uses a priority queue with the manhatten distance as weight and pre defined comparator to
-//expand the ndoes in order
+//expand the ndoes in order all expands are set to stop after depth of 40 is reached with no solution
 void manhattenSearch(node* root, int type){
 	node* curr = root;
 	priority_queue<node*, vector<node*>, Compare> ready;
 	node* tmp;
+	int maxSize = 0;
 	int expanded = 0;
 	while(!curr->isSolution()){
 		++expanded;
@@ -33,11 +35,19 @@ void manhattenSearch(node* root, int type){
 		}
 		else break;
 		if(expanded % 1000 && root->getDepth() >= 40) break;
+		if(ready.size() > maxSize) maxSize = ready.size();
 	}
 	if(curr->isSolution()){
 		cout << "number of nodes expanded " << expanded << endl;
+		cout << " max queueu size: " << maxSize << endl;
 		cout << "solution" << endl;
-		root->printSolution();
+		stack<node*> solution;
+		root->traceSolution(&solution);
+		while(!solution.empty()){
+			if(solution.top() != NULL)solution.top()->printPuzzle();
+			solution.pop();
+			cout << endl;
+		}
 	}
 	else cout << "failed to find solution by a depth of 40. Aborting." << endl;
 	return;
@@ -48,6 +58,7 @@ void misplacedTileSearch(node* root, int type){
 	node* curr = root;
 	priority_queue<node*, vector<node*>, Compare> ready;
 	node* tmp;
+	int maxSize = 0;
 	int expanded = 0;
 	while(!curr->isSolution()){
 		++expanded;
@@ -65,10 +76,19 @@ void misplacedTileSearch(node* root, int type){
 		}
 		else break;
 		if((expanded % 1000 == 0) && (root->getDepth() >= 40)) break;
+		if(ready.size() > maxSize) maxSize = ready.size();
 	}
 	if(curr->isSolution()){
 		cout << "number of nodes expanded " << expanded << endl;
-		root->printSolution();
+		cout << "max queue size: " << maxSize << endl;
+		cout << "solution" << endl;
+		stack<node*> solution;
+		root->traceSolution(&solution);
+		while(!solution.empty()){
+			if(solution.top() != NULL)solution.top()->printPuzzle();
+			solution.pop();
+			cout << endl;
+		}
 	}
 	else cout << "failed to find solution by a depth of 40. Aborting" << endl;
 	return;
@@ -79,7 +99,8 @@ void uniformCostSearch(node* root, int type){
 	node* curr = root;
 	queue<node*> ready;
 	node* tmp;
-	long long expanded = 0;
+	int maxSize = 0;
+	int expanded = 0;
 	while(!curr->isSolution()){
 		++expanded;
 		tmp = curr->createLeft(type);
@@ -96,11 +117,19 @@ void uniformCostSearch(node* root, int type){
 		}
 		else break;
 		if((expanded % 1000000 == 0) && (root->getDepth() >= 40)) break;
+		if(ready.size() > maxSize) maxSize = ready.size();
 	}
 	if(curr->isSolution()){
 		cout << "number of nodes expanded " << expanded << endl;
+		cout << "max queue size: " << maxSize << endl;
 		cout << "solution" << endl;
-		root->printSolution();
+		stack<node*> solution;
+		root->traceSolution(&solution);
+		while(!solution.empty()){
+			if(solution.top() != NULL)solution.top()->printPuzzle();
+			solution.pop();
+			cout << endl;
+		}
 	}
 	else cout << "failed to find solution by a depth of 40. Aborting. nodes expanded: " << expanded << endl;
 	return;
