@@ -46,32 +46,30 @@ class node{
 		//calculates the manhatten distance with a nested loops. Keeps track of what row and col
 		//that each number should be in and compares it to where it was found.
 		int manhattenDistance(){
-			cout << "calling manhatten" << endl;
 			int manhatten = 0;
 			int R = 0;
 			int C = 0;
 			int i = 0;
 			int j = 0;
 			bool eq = false;
-			for(int k = 1; k < 9; ++k){
+			for(int k = 1; k < maxNum; ++k){
 				eq = false;
-				for(i = 0; i < 3; ++i){
-					for(j = 0; j < 3; ++j){
+				for(i = 0; i < rows; ++i){
+					for(j = 0; j < cols; ++j){
 						if(puzzle[i][j] == k) eq = true;
 						if(eq) break;
 					}
 					if(eq) break;
 				}
-				if(i == 3) i = 2;
-				if(j == 3) j = 2;
+				if(i == rows) i = rows -1;
+				if(j == cols) j = cols - 1;
 				manhatten += (abs(i-R)+abs(j-C));
-				if(C == 3){
+				if(C == (cols-1)){
 					C = 0;
 					++R;
 				}
 				else ++C;
 			}
-			cout << "results: " << manhatten << endl;
 			return manhatten;
 		};
 		//old function to get the depth before the varriable was added
@@ -97,7 +95,7 @@ class node{
 	public:
 		//constructors for the nodes.
 		node(){Solution = false;};
-		node(int puz[][rows], int depth){
+		node(int puz[][cols], int depth){
 			for(int i = 0; i < rows; ++i){
 				for(int j = 0;j < cols; ++j){
 					puzzle[i][j] = puz[i][j];
