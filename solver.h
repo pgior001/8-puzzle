@@ -19,6 +19,8 @@ void manhattenSearch(node* root, int type){
 	node* tmp;
 	int maxSize = 0;
 	int expanded = 0;
+	cout << "expanding" << endl;
+	curr->printPuzzle();
 	while(!curr->isSolution()){
 		++expanded;
 		tmp = curr->createLeft(type);
@@ -31,6 +33,9 @@ void manhattenSearch(node* root, int type){
 		if(tmp != NULL) ready.push(tmp);
 		if(ready.top() != NULL){
 			curr = ready.top();
+			cout << "The best state to expand with h(n) = " << curr->getWeight() << " and g(n) = "
+			<< curr->getPathDepth() << " is..." << endl;
+			curr->printPuzzle();
 			ready.pop();
 		}
 		else break;
@@ -39,7 +44,7 @@ void manhattenSearch(node* root, int type){
 	}
 	if(curr->isSolution()){
 		cout << "number of nodes expanded " << expanded << endl;
-		cout << " max queueu size: " << maxSize << endl;
+		cout << " max queue size: " << maxSize << endl;
 		cout << "solution" << endl;
 		stack<node*> solution;
 		root->traceSolution(&solution);
@@ -72,6 +77,9 @@ void misplacedTileSearch(node* root, int type){
 		if(tmp != NULL) ready.push(tmp);
 		if(ready.top() != NULL){
 			curr = ready.top();
+			cout << "The best state to expand with h(n) = " << curr->getWeight() << " and g(n) = "
+			<< curr->getPathDepth() << " is..." << endl;
+			curr->printPuzzle();
 			ready.pop();
 		}
 		else break;
@@ -113,6 +121,9 @@ void uniformCostSearch(node* root, int type){
 		if(tmp != NULL) ready.push(tmp);
 		if(ready.front() != NULL){
 			curr = ready.front();
+			cout << "The best state to expand with h(n) = " << curr->getWeight() << " and g(n) = "
+			<< curr->getPathDepth() << " is..." << endl;
+			curr->printPuzzle();
 			ready.pop();
 		}
 		else break;
