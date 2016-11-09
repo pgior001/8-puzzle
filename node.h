@@ -7,6 +7,7 @@ using namespace std;
 const int rows = 3;
 const int cols = 3;
 int maxNum = 9;
+int solutionArry[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
 
 class node{
 	private:
@@ -35,10 +36,9 @@ class node{
 			int position = 1;
 			for(int i = 0; i < rows; ++i){
 				for(int j = 0; j < cols; ++j){
-					if(puzzle[i][j] != position && (i + j) != 4){
+					if(puzzle[i][j] != solutionArry[i][j] && (i + j) != 4){
 						++misplaced;
 					}
-					++position;
 				}
 			}
 			return misplaced;
@@ -56,7 +56,7 @@ class node{
 				eq = false;
 				for(i = 0; i < rows; ++i){
 					for(j = 0; j < cols; ++j){
-						if(puzzle[i][j] == k) eq = true;
+						if(puzzle[i][j] == solutionArry[R][C]) eq = true;
 						if(eq) break;
 					}
 					if(eq) break;
